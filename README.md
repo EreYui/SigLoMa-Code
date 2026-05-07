@@ -2,23 +2,17 @@
 
 SigLoMa-Code is the public entry repository for the SigLoMa system: training code, deployment guidance, and the full repository map built on top of `ROS Base`.
 
-> [!IMPORTANT]
+> [!TIP]
 > **Project Website / Framework Docs**
 >
-> Before deployment, start from the framework docs:
+> If you want to understand the framework behind the full system, the `ROS Base` documentation website is the best place to start:
 > - English: <https://11chens.github.io/ros_base_doc/en/>
 > - Chinese: <https://11chens.github.io/ros_base_doc/>
 >
-> `ROS Base` is not just a dependency. It is the framework that explains how SigLoMa organizes VLM, locomotion, filtering, bridge nodes, and VSLAM into one mixed-frequency robotic system.
-
-## Why ROS Base, Why SigLoMa
-
-`ROS Base` is an open-source ROS2 Python framework designed for complex robotic systems. It gives SigLoMa a clean way to organize:
-
-- plugin-style project structure
-- mixed-frequency modules for perception, control, state machines, and hardware bridges
-- efficient shared context inside one main process
-- multi-process expansion when a module should be isolated for performance
+> **Why ROS Base**
+> - Plugin-style project structure for reusable multi-module deployment
+> - Mixed-frequency coordination across perception, control, state machines, and bridge nodes
+> - Stable performance with efficient shared context and multi-process isolation
 
 SigLoMa builds on top of that foundation to connect training, high-level VLM orchestration, low-level locomotion, filtering, and real-robot deployment into one reproducible workflow.
 
@@ -29,51 +23,39 @@ SigLoMa builds on top of that foundation to connect training, high-level VLM orc
 3. [`ROS Base Documentation`](https://11chens.github.io/ros_base_doc/en/): the project website that explains the framework design, core concepts, and real examples.
 4. [`SigLoMa-VLM`](https://github.com/11chens/SigLoMa-VLM): high-level task orchestration, VLM integration, visual tracking, and bridge logic.
 5. [`quad_deploy`](https://github.com/11chens/quad_deploy): low-level locomotion deployment and execution-side control.
-6. [`KalmanFilter`](https://github.com/11chens/KalmanFilter): standalone state-estimation module and filtering experiments.
+6. [`KalmanFilter`](https://github.com/11chens/KalmanFilter): standalone Kalman-filter implementation repository used by the ROS-side sigma-points tracking node.
 
 More details are collected in [docs/repositories.md](docs/repositories.md).
 
 ## Quick Start
 
-### 1. Read the framework docs first
-
-If you want to understand why the system is organized this way, start with the project website:
-
-- <https://11chens.github.io/ros_base_doc/en/>
-
-That documentation explains the `BaseManager`, `BaseNode`, `BaseAgent`, and `BaseHandler` model that SigLoMa uses for deployment orchestration.
-
-### 2. Clone this repository
+### 1. Clone this repository
 
 ```bash
 git clone https://github.com/11chens/SigLoMa-Code.git
 cd SigLoMa-Code
 ```
 
-### 3. Install the local Python package
+### 2. Choose a workflow
 
-```bash
-pip install -e .
-```
-
-### 4. Choose a workflow
-
-- Training path: see [docs/training.md](docs/training.md)
-- Real-robot deployment path: see [docs/deployment.md](docs/deployment.md)
-- Hardware notes and pending assets: see [docs/hardware.md](docs/hardware.md)
+- Training setup and commands: see [docs/training.md](docs/training.md)
+- Real-robot deployment: see [docs/deployment.md](docs/deployment.md)
+- Hardware list and notes: see [docs/hardware.md](docs/hardware.md)
 
 ## Training Overview
 
 Training is documented around a dedicated environment named `sigloma`.
 
-The current public entrypoints are reserved as:
+The current workflow is:
+
+1. Create and activate the `sigloma` environment.
+2. Install `Isaac Gym` and follow the setup in [docs/training.md](docs/training.md).
+3. Run the public training commands:
 
 ```bash
 python scripts/train.py --config configs/train.example.yaml
 python scripts/play.py --config configs/play.example.yaml
 ```
-
-The command shape is already fixed, but the full training stack is still being migrated into this repository. See [docs/training.md](docs/training.md) for the planned setup and current placeholder status.
 
 ## Deployment Overview
 
@@ -81,25 +63,52 @@ Real-robot deployment is documented around a dedicated environment named `siglom
 
 Current deployment flow:
 
-1. Install `isaac_ros_visual_slam`
-2. Install the required SigLoMa repositories
-3. Activate the deployment environment
+1. Connect to the robot with `ssh -X`
+2. Install `isaac_ros_visual_slam`
+3. Install the required SigLoMa repositories
 4. Launch the unified SigLoMa entry from `SigLoMa-VLM`
 
 ```bash
+ssh -X user@robot_ip
 conda activate sigloma_run
 cd ~/Project/SigLoMa-VLM
 python launch/sigloma_launch.py
 ```
 
+Recommended workflow notes:
+
+- prefer `ssh -X` so you can launch remotely and still access the first-person image stream
+- avoid opening VS Code directly on the robot during deployment, because the VS Code server can occupy a large amount of memory and reduce deployment efficiency
+- use a high-bandwidth network card to keep the forwarded image stream responsive and stable
+
 The current launcher automatically wires together `quad_deploy`, `SigLoMa-VLM`, `ros_base`, and the `VSLAM_DOCKER` session through `launch/launch_cfg.yaml`. Full details live in [docs/deployment.md](docs/deployment.md).
+
+The two main VLM scripts are:
+
+- `SigLoMa-VLM/sigloma_vlm/scripts/pick_place_run.py`
+- `SigLoMa-VLM/sigloma_vlm/scripts/test_modules.py`
+
+They are switched through the launcher node selection:
+
+```bash
+# Full pick-and-place workflow
+python launch/sigloma_launch.py
+
+# Single-stage module testing
+python launch/sigloma_launch.py --disable VLM_LOGIC --enable VLM_TEST
+```
+
+After launch, the operator uses the real controller and the SigLoMa UI together:
+
+- `pick_place_run.py`: finish all pick-target annotations first, press `Space`, then annotate the place target and press `Space` again
+- `test_modules.py`: single-module testing, so each run only needs one manual box selection
 
 ## Hardware Notes
 
-The current documentation assumes the existing real-robot setup. Highlights:
+This section focuses on the current hardware list and connection notes:
 
 - use a high-bandwidth network card on the robot side
-- keep the gripper and STM32 controller documented as a concrete reference setup
+- keep the gripper, its controller board, and the mounting parts documented as one reference setup
 - connection diagrams and hardware photos are still being prepared
 
 See [docs/hardware.md](docs/hardware.md) for the current structure and placeholders.
@@ -108,4 +117,5 @@ See [docs/hardware.md](docs/hardware.md) for the current structure and placehold
 
 - `SigLoMa-VLM` is the current real deployment entrypoint.
 - `SigLoMa-Code` reserves the public training entrypoints and the top-level integration docs.
+- `ros_base` provides the running ROS node wrappers, while the underlying Kalman implementation is installed from [`KalmanFilter`](https://github.com/11chens/KalmanFilter).
 - Some hardware assets and `isaac_ros_visual_slam` local modifications are still marked as pending.
