@@ -1,0 +1,5 @@
+task: placeholder_training_task
+robot: sigloma
+simulator: isaacgym
+notes:
+  - Replace this file with the first public training config when the training code is migrated.

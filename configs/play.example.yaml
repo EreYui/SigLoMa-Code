@@ -1,0 +1,5 @@
+task: placeholder_play_task
+robot: sigloma
+checkpoint: path/to/checkpoint.pt
+notes:
+  - Replace this file with the first public evaluation or play config when the training code is migrated.
