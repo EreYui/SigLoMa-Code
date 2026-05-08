@@ -1,6 +1,6 @@
 # SigLoMa-Code
 
-SigLoMa-Code is the public entry repository for the SigLoMa system: training code, deployment guidance, and the full repository map built on top of `ROS Base`.
+SigLoMa-Code is the public entry repository for the SigLoMa system: training code, deployment guidance, and the full repository map built on top of a reusable robotics ecosystem centered on `ros_base`, `quad_deploy`, and `KalmanFilter`.
 
 > [!TIP]
 > **Project Website / Framework Docs**
@@ -14,16 +14,24 @@ SigLoMa-Code is the public entry repository for the SigLoMa system: training cod
 > - Mixed-frequency coordination across perception, control, state machines, and bridge nodes
 > - Stable performance with efficient shared context and multi-process isolation
 
-SigLoMa builds on top of that foundation to connect training, high-level VLM orchestration, low-level locomotion, filtering, and real-robot deployment into one reproducible workflow.
+SigLoMa builds on top of that foundation to connect training, high-level VLM orchestration, reusable locomotion deployment, Kalman-filter integration, and real-robot deployment into one reproducible workflow.
+
+## Core Reusable Repositories
+
+These repositories are not only for SigLoMa. They are intentionally decoupled, can run independently, and are designed to be reused and extended in other robotics projects.
+
+1. [`ros_base`](https://github.com/11chens/ros_base): a ROS2 Python framework for plugin-style robot-system management, built for multi-module integration across different frequencies such as perception, control, and state-machine logic.
+2. [`quad_deploy`](https://github.com/11chens/quad_deploy): a `ros_base`-based quadruped reinforcement-learning deployment framework with a plugin-style architecture, designed to be reusable and extensible for both low-level joint control and high-level command control.
+3. [`KalmanFilter`](https://github.com/11chens/KalmanFilter): a standalone Kalman-filter development repository for robot-system integration, simulation, visualization, and solution testing, with built-in support for frequency amplification and delay compensation.
 
 ## Repository Map
 
 1. [`SigLoMa-Code`](https://github.com/11chens/SigLoMa-Code): public entry repository for training code, workflow documentation, and installation guides.
-2. [`ros_base`](https://github.com/11chens/ros_base): the underlying ROS2 Python framework used across the SigLoMa system.
-3. [`ROS Base Documentation`](https://11chens.github.io/ros_base_doc/en/): the project website that explains the framework design, core concepts, and real examples.
-4. [`SigLoMa-VLM`](https://github.com/11chens/SigLoMa-VLM): high-level task orchestration, VLM integration, visual tracking, and bridge logic.
-5. [`quad_deploy`](https://github.com/11chens/quad_deploy): low-level locomotion deployment and execution-side control.
-6. [`KalmanFilter`](https://github.com/11chens/KalmanFilter): standalone Kalman-filter implementation repository used by the ROS-side sigma-points tracking node.
+2. [`ros_base`](https://github.com/11chens/ros_base): the reusable ROS2 Python framework that provides the system architecture used by SigLoMa and other robotics projects.
+3. [`quad_deploy`](https://github.com/11chens/quad_deploy): the reusable quadruped RL deployment framework for low-level and high-level locomotion control.
+4. [`KalmanFilter`](https://github.com/11chens/KalmanFilter): the reusable Kalman-filter development repository for simulation, visualization, and robot-side integration.
+5. [`ROS Base Documentation`](https://11chens.github.io/ros_base_doc/en/): the project website that explains the framework design, core concepts, and real examples.
+6. [`SigLoMa-VLM`](https://github.com/11chens/SigLoMa-VLM): high-level task orchestration, VLM integration, visual tracking, and bridge logic for the SigLoMa application layer.
 
 More details are collected in [docs/repositories.md](docs/repositories.md).
 
@@ -86,7 +94,7 @@ The current launcher automatically wires together `quad_deploy`, `SigLoMa-VLM`, 
 The two main VLM scripts are:
 
 - `SigLoMa-VLM/sigloma_vlm/scripts/pick_place_run.py`
-- `SigLoMa-VLM/sigloma_vlm/scripts/test_modules.py`
+- `SigLoMa-VLM/sigloma_vlm/scripts/single_module_run.py`
 
 They are switched through the launcher node selection:
 
@@ -94,14 +102,14 @@ They are switched through the launcher node selection:
 # Full pick-and-place workflow
 python launch/sigloma_launch.py
 
-# Single-stage module testing
-python launch/sigloma_launch.py --disable VLM_LOGIC --enable VLM_TEST
+# Standalone single-module run
+python launch/sigloma_launch.py --disable VLM_PICK_PLACE --enable VLM_SINGLE
 ```
 
 After launch, the operator uses the real controller and the SigLoMa UI together:
 
 - `pick_place_run.py`: finish all pick-target annotations first, press `Space`, then annotate the place target and press `Space` again
-- `test_modules.py`: single-module testing, so each run only needs one manual box selection
+- `single_module_run.py`: standalone pick or place execution, so each run only needs one manual box selection
 
 ## Hardware Notes
 

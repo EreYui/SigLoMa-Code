@@ -86,12 +86,12 @@ python launch/sigloma_launch.py
 The VLM runtime scripts are located in:
 
 - `SigLoMa-VLM/sigloma_vlm/scripts/pick_place_run.py`
-- `SigLoMa-VLM/sigloma_vlm/scripts/test_modules.py`
+- `SigLoMa-VLM/sigloma_vlm/scripts/single_module_run.py`
 
 The launcher switches between these modes through node selection in `launch/launch_cfg.yaml`:
 
-- `VLM_LOGIC` runs `sigloma_vlm/scripts/pick_place_run.py`
-- `VLM_TEST` runs `sigloma_vlm/scripts/test_modules.py`
+- `VLM_PICK_PLACE` runs `sigloma_vlm/scripts/pick_place_run.py`
+- `VLM_SINGLE` runs `sigloma_vlm/scripts/single_module_run.py`
 
 Example commands:
 
@@ -99,8 +99,8 @@ Example commands:
 # Full pick-and-place workflow
 python launch/sigloma_launch.py
 
-# Single-stage module testing
-python launch/sigloma_launch.py --disable VLM_LOGIC --enable VLM_TEST
+# Standalone single-module run
+python launch/sigloma_launch.py --disable VLM_PICK_PLACE --enable VLM_SINGLE
 ```
 
 ## What the Current Launcher Starts
@@ -108,8 +108,8 @@ python launch/sigloma_launch.py --disable VLM_LOGIC --enable VLM_TEST
 The current `SigLoMa-VLM/launch/launch_cfg.yaml` is designed to orchestrate:
 
 - `RL_CONTROL` from `quad_deploy`
-- `VLM_LOGIC` from `SigLoMa-VLM`
-- `VLM_TEST` from `SigLoMa-VLM` as an optional test target
+- `VLM_PICK_PLACE` from `SigLoMa-VLM`
+- `VLM_SINGLE` from `SigLoMa-VLM` as an optional standalone target
 - `KALMAN_NODE` from `ros_base`
 - `VIS_NODE` from `SigLoMa-VLM`
 - `VSLAM_DOCKER` as a separate VSLAM session
@@ -124,11 +124,11 @@ After the launcher starts, the current interactive flow includes both robot cont
 
 ### UI Selection Workflows
 
-`test_modules.py` is intended for isolated pick or place testing:
+`single_module_run.py` is intended for standalone pick or place runs:
 
 1. Drag the mouse once to select the current target.
 2. Press `Enter` to confirm the selection.
-3. The script then tests the single selected pick or place target.
+3. The script then runs the single selected pick or place module.
 
 `pick_place_run.py` is the full pick-and-place workflow:
 
