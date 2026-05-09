@@ -16,6 +16,13 @@ SigLoMa-Code is the public entry repository for the SigLoMa system: training cod
 
 SigLoMa builds on top of that foundation to connect training, high-level VLM orchestration, reusable locomotion deployment, Kalman-filter integration, and real-robot deployment into one reproducible workflow.
 
+## Deployment Operation Demo
+
+The deployment demo shows the full real-robot workflow, starting from launch and continuing through operator-side interaction and the corresponding third-person robot motion.
+
+<video src="videos/demo.mp4" controls width="100%" title="SigLoMa deployment operation demo"></video>
+
+
 ## Core Reusable Repositories
 
 These repositories are not only for SigLoMa. They are intentionally decoupled, can run independently, and are designed to be reused and extended in other robotics projects.
@@ -116,10 +123,15 @@ After launch, the operator uses the real controller and the SigLoMa UI together:
 This section focuses on the current hardware list and connection notes:
 
 - use a high-bandwidth network card on the robot side
-- keep the gripper, its controller board, and the mounting parts documented as one reference setup
-- connection diagrams and hardware photos are still being prepared
+- keep the gripper, its controller board, the camera, the USB hub, and the mounting parts documented as one reference setup
+- use the annotated hardware photo and gripper reference image to match the documentation with the real setup
 
-See [docs/hardware.md](docs/hardware.md) for the current structure and placeholders.
+See [docs/hardware.md](docs/hardware.md) for the annotated hardware setup and component notes.
+
+## Hardware Setup
+The current real-robot hardware setup is shown below. It includes the gripper, Intel RealSense D435i camera, STM32 servo control board, USB hub, and high-bandwidth network card used for deployment.
+
+<img src="images/hardware.png" alt="Annotated real-robot hardware setup" width="60%">
 
 ## Current Status
 

@@ -1,13 +1,12 @@
 # Deployment
 
-## Framework Overview
+## Deployment Demo
 
-If you want the architecture behind the deployment stack, the framework docs are a helpful reference:
+The deployment demo shows the full real-robot workflow, starting from launch and continuing through operator-side interaction and the corresponding third-person robot motion.
 
-- English: <https://11chens.github.io/ros_base_doc/en/>
-- Chinese: <https://11chens.github.io/ros_base_doc/>
+<video src="../videos/demo.mp4" controls width="100%" title="SigLoMa deployment operation demo"></video>
 
-That documentation explains the manager-agent-handler-node structure used by the SigLoMa deployment stack.
+If the video does not render in your Markdown viewer, open it directly: [Deployment operation demo](../videos/demo.mp4).
 
 ## Recommended Environment
 
@@ -15,23 +14,32 @@ That documentation explains the manager-agent-handler-node structure used by the
 - Workspace root in the current launcher config: `~/Project`
 - ROS setup in the current launcher config: `~/unitree_ros2/setup_id1.sh`
 
-## Environment Setup
+## Full Deployment Flow
 
-### Recommended Connection Method
+After the environment and repositories have been prepared, the recommended real-robot workflow is:
 
-For real deployment, it is recommended to connect to the robot with `ssh -X` and launch the system remotely:
+1. Connect to the robot with `ssh -X`.
+2. Activate the deployment environment.
+3. Launch the unified SigLoMa entry from `SigLoMa-VLM`.
+4. Complete the UI target selection workflow.
+5. Use the wireless controller to switch the robot into autonomous execution.
 
 ```bash
 ssh -X user@robot_ip
+conda activate sigloma_run
+cd ~/Project/SigLoMa-VLM
+python launch/sigloma_launch.py
 ```
 
-This workflow is recommended because:
+This workflow is used because:
 
 - `ssh -X` keeps the deployment workflow lightweight on the robot
 - X11 forwarding provides the first-person image stream needed by the SigLoMa UI
 - a high-bandwidth network card helps keep the image transmission responsive and stable
 
 It is not recommended to open VS Code directly on the robot during deployment, because the VS Code server can consume a large amount of memory and reduce deployment efficiency.
+
+## Environment Setup
 
 ### 1. Install ROS2 in the deployment environment
 
@@ -118,9 +126,9 @@ The launcher configuration already contains a dedicated `conda_env` and `ros_set
 
 `KALMAN_NODE` is the ROS-side node wrapper from `ros_base`, while its underlying Kalman tracking implementation comes from the separately installed [`KalmanFilter`](https://github.com/11chens/KalmanFilter) repository.
 
-## After Launch
+## Operator Workflow
 
-After the launcher starts, the current interactive flow includes both robot control and target selection.
+After the launcher starts, the interactive flow includes both robot control and target selection.
 
 ### UI Selection Workflows
 
@@ -151,6 +159,15 @@ During the VLM workflow, the VLM side can finish target anchoring first and then
 
 The VLM rotation stages in `pick_place_run.py` explicitly wait for `rl_ready`, so annotation and autonomous execution are separated by design.
 
+## Framework Overview
+
+If you want the architecture behind the deployment stack, the framework docs are a helpful reference:
+
+- English: <https://11chens.github.io/ros_base_doc/en/>
+- Chinese: <https://11chens.github.io/ros_base_doc/>
+
+That documentation explains the manager-agent-handler-node structure used by the SigLoMa deployment stack.
+
 ## Notes on `KalmanFilter`
 
 `KalmanFilter` is published as an independent repository that provides the underlying Kalman filter implementation. The current `sigloma_launch.py` deployment path launches `kf_sigma_node.py` from `ros_base`, and that ROS node calls into the `KalmanFilter` package for the actual tracking algorithm.
@@ -159,4 +176,4 @@ The VLM rotation stages in `pick_place_run.py` explicitly wait for `rl_ready`, s
 
 - document the recommended `isaac_ros_visual_slam` local patches and helper scripts
 - add troubleshooting notes for the deployment environment
-- document the full operator workflow in more detail for later public release
+- expand the operator workflow with additional failure cases and recovery notes

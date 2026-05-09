@@ -335,7 +335,7 @@ class Go2NavFlatCfg( LeggedRobotNavCfg ):
         max_contact_force = 100.
         tracking_sigma = 0.1
         weight_track_pick_long_pos = 3.0
-        weight_track_pick_short_pos = 5.0
+        weight_track_pick_short_pos = 3.0
         weight_track_place_pos = 5.0
         rot_track_sigma = 0.04
         pos_track_sigma = 0.02
