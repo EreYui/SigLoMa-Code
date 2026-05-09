@@ -1,12 +1,5 @@
 # Training
 
-The current public training commands are:
-
-```bash
-python scripts/train.py --config configs/train.example.yaml
-python scripts/play.py --config configs/play.example.yaml
-```
-
 ## Installation
 
 ### 1. Create and activate the training environment
@@ -28,11 +21,16 @@ cd isaacgym/python
 pip install -e .
 ```
 
-### 3. Clone `SigLoMa-Code`
-
+### 3. Install rsl_rl
+- Clone this repository
+- Install the package:
 ```bash
-git clone https://github.com/11chens/SigLoMa-Code.git
-cd SigLoMa-Code
+cd SigLoMaGym/rsl_rl && pip install -e .
+```
+
+### 4. Install legged_gym
+```bash
+cd ../ && pip install -e .
 ```
 
 ## Usage
@@ -40,11 +38,11 @@ cd SigLoMa-Code
 ### Training
 
 ```bash
-python scripts/train.py --config configs/train.example.yaml
+python legged_gym/scripts/train.py --headless
 ```
 
 ### Testing
 
 ```bash
-python scripts/play.py --config configs/play.example.yaml
+python legged_gym/scripts/play.py
 ```
