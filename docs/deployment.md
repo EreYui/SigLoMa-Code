@@ -132,7 +132,7 @@ After the launcher starts, the current interactive flow includes both robot cont
 
 `pick_place_run.py` is the full pick-and-place workflow:
 
-1. Use the UI to drag and confirm all pick targets one by one.
+1. Use the UI to drag and confirm (Press `Enter`) all pick targets one by one.
 2. Press `Space` after all pick targets have been collected.
 3. Then drag and confirm the place target.
 4. Press `Space` again to finish the annotation stage.

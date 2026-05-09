@@ -61,8 +61,8 @@ The current workflow is:
 3. Run the public training commands:
 
 ```bash
-python scripts/train.py --config configs/train.example.yaml
-python scripts/play.py --config configs/play.example.yaml
+python legged_gym/scripts/train.py --headless
+python legged_gym/scripts/play.py
 ```
 
 ## Deployment Overview
@@ -126,4 +126,3 @@ See [docs/hardware.md](docs/hardware.md) for the current structure and placehold
 - `SigLoMa-VLM` is the current real deployment entrypoint.
 - `SigLoMa-Code` reserves the public training entrypoints and the top-level integration docs.
 - `ros_base` provides the running ROS node wrappers, while the underlying Kalman implementation is installed from [`KalmanFilter`](https://github.com/11chens/KalmanFilter).
-- Some hardware assets and `isaac_ros_visual_slam` local modifications are still marked as pending.
