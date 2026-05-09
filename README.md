@@ -20,8 +20,9 @@ SigLoMa builds on top of that foundation to connect training, high-level VLM orc
 
 The deployment demo shows the full real-robot workflow, starting from launch and continuing through operator-side interaction and the corresponding third-person robot motion.
 
-<video src="videos/demo.mp4" controls width="100%" title="SigLoMa deployment operation demo"></video>
+<img src="videos/demo.gif" alt="SigLoMa deployment operation demo" width="100%">
 
+For the original video, open [videos/demo.mp4](videos/demo.mp4).
 
 ## Core Reusable Repositories
 

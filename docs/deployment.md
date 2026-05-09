@@ -4,9 +4,9 @@
 
 The deployment demo shows the full real-robot workflow, starting from launch and continuing through operator-side interaction and the corresponding third-person robot motion.
 
-<video src="../videos/demo.mp4" controls width="100%" title="SigLoMa deployment operation demo"></video>
+<img src="../videos/demo.gif" alt="SigLoMa deployment operation demo" width="100%">
 
-If the video does not render in your Markdown viewer, open it directly: [Deployment operation demo](../videos/demo.mp4).
+For the original video, open [Deployment operation demo](../videos/demo.mp4).
 
 ## Recommended Environment
 
