@@ -58,7 +58,7 @@ class Go2NavFlatCfg( LeggedRobotNavCfg ):
         num_observations = num_props * history_len + num_priv + num_nav_commands * nav_history_len
         num_privileged_obs = None
 
-        num_envs = 2048
+        num_envs = 4096
         episode_length_s = EPISODE_LENGTH_S # episode length in seconds  # will be randomized in [s-minus, s]
         debug_viz = False
 
@@ -357,7 +357,7 @@ class Go2NavFlatCfgPPO( LeggedRobotCfgPPO ):
         experiment_name = 'go2_nav_flat'
 
         save_interval = 200  # save model every n iterations
-        max_iterations = 4000  # maximum number of training iterations
+        max_iterations = 10000  # maximum number of training iterations
         
         # policy_class_name = 'ActorCriticEncoder' # good performance
         policy_class_name = 'ActorCriticTCN'
