@@ -58,9 +58,7 @@ class Go2NavFlatCfg( LeggedRobotNavCfg ):
         num_observations = num_props * history_len + num_priv + num_nav_commands * nav_history_len
         num_privileged_obs = None
 
-        # [SigLoMa] Reduced from 4096 to 1024: balance rollout speed (PhysX + tracker PCA)
-        # vs data throughput. With 1024×24=24,576 transitions/iter and epochs=1, ~48s/iter.
-        num_envs = 1024
+        num_envs = 4096
         episode_length_s = EPISODE_LENGTH_S # episode length in seconds  # will be randomized in [s-minus, s]
         debug_viz = False
 
@@ -352,11 +350,7 @@ class Go2NavFlatCfgPPO( LeggedRobotCfgPPO ):
         # entropy_coef = 0.05
         # entropy_coef = 0.003
         entropy_coef = 0.01
-        # [SigLoMa] Reduced from 5 to 1: 4096 envs × 24 steps = 98,304 transitions per iter,
-        # enough data diversity to avoid overfitting without re-epoching. Speeds up learning ~5x.
-        num_learning_epochs = 1
-        # [SigLoMa] Kept at 4: mini-batch size ~24,576, GPU-friendly with large obs dims.
-        # If OOM, increase this to shrink per-batch memory.
+        num_learning_epochs = 5
         num_mini_batches = 4
 
 
