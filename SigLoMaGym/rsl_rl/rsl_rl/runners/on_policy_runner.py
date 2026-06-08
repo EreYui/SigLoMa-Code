@@ -95,7 +95,7 @@ class OnPolicyRunner:
         self.current_learning_iteration = 0
 
         _, _ = self.env.reset()
-    
+
     def learn(self, num_learning_iterations, init_at_random_ep_len=False):
         # initialize writer
         if self.log_dir is not None and self.writer is None:
@@ -124,7 +124,7 @@ class OnPolicyRunner:
                 dynamic_feeding_probs = []
                 for i in range(self.num_steps_per_env):
                     actions = self.alg.act(obs, critic_obs)
-                    
+
                     # --- Chunking Logic (Training) ---
                     if hasattr(self.alg.actor_critic, 'chunk_size') and self.alg.actor_critic.chunk_size > 1:
                         if not hasattr(self, 'action_integrator'):
@@ -134,12 +134,12 @@ class OnPolicyRunner:
                              action_dim = actions.shape[-1] // chunk_size
                              self.action_integrator = ActionIntegrator(self.env.num_envs, chunk_size, action_dim, device=self.device)
                              self.action_integrator.reset()
-                        
+
                         exec_actions = self.action_integrator.add_and_aggregate(actions)
                     else:
                         exec_actions = actions
                     # ---------------------------------
-                    
+
                     obs, privileged_obs, rewards, dones, infos = self.env.step(exec_actions)
                     
                     # --- Reset Integrator on Done ---
@@ -177,7 +177,7 @@ class OnPolicyRunner:
                 # Learning step
                 start = stop
                 self.alg.compute_returns(critic_obs)
-            
+
             mean_value_loss, mean_surrogate_loss, mean_imitation_loss, mean_contrastive_loss = self.alg.update()
             stop = time.time()
             learn_time = stop - start

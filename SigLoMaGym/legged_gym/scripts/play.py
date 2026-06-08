@@ -69,7 +69,7 @@ def play(args):
     env: LeggedRobotNav
     env_cfg: Go2NavFlatCfg
 
-    args.load_run = '05_09_23-35-31_'
+    # args.load_run passed from command line, e.g.: --load_run 06_05_20-17-01_ --checkpoint 4600
     env_cfg, train_cfg = task_registry.get_cfgs(name=args.task)
     # override some parameters for testing
     env_cfg.env.num_envs = 1
